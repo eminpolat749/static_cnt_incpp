@@ -1,0 +1,55 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<cassert>
+
+class Fighter {
+public:
+	Fighter(const Fighter& other) : m_name(other.m_name)
+	{
+		mfvec.push_back(this);
+	}
+	Fighter(const std::string& name) : m_name(name)
+	{
+		mfvec.push_back(this);
+	}
+	~Fighter()
+	{
+		auto iter = std::find(mfvec.begin(), mfvec.end(), this);
+		assert(iter != mfvec.end());
+		mfvec.erase(iter);
+	}
+	void call_fighters()
+	{
+		std::cout << "ben " << m_name << " ";
+		std::cout << "dusmanlar sardi etrafimi\n";
+		for (auto ptr : mfvec){
+			if (ptr != this)
+				std::cout << ptr->m_name << " ";
+		}
+		std::cout << "yardima kosun!\n";
+	}
+	void attack() {}
+	void sleep() {}
+	void eat() {}
+private:
+	std::string m_name;
+	static std::vector<Fighter*> mfvec;
+};
+//fighter.cpp
+std::vector<Fighter*> Fighter::mfvec;
+
+
+int main()
+{
+	Fighter f1{ "emin" };
+	Fighter f2{ "mirac" };
+	Fighter f3{ "miray" };
+
+	Fighter* p1 = new Fighter("aleyna");
+	Fighter* p2 = new Fighter("betül");
+	delete p2;
+	f2.call_fighters();
+	delete p1;
+}
